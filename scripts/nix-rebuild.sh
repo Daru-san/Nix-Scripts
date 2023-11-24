@@ -14,8 +14,8 @@ while getopts h:m: flag; do
 		;;
 	esac
 done
-if [[ m = '' ]]; then
-	${mode} = 'switch'
+if [ mode != 'switch' ] && [ mode != 'boot' ]; then
+	mode='switch'
 fi
 
 hostname=$(hostname -f)
