@@ -103,7 +103,7 @@ elif [ "$switch" == true ] && [ "$upgrade" == false ]; then
 elif [ "$switch" == true ] && [ "$upgrade" == true ]; then
 	echo "Upgrading system and switching to current configuration (flake)"
 	sleep 3
-	sudo nixos-rebuild switch --flake .#$hostname $impure --upgrade-all
+	sudo nixos-rebuild switch --flake .#$hostname $impure --update-input nixpkgs --commit-lock-file
 elif [ "$boot" == true ] && [ "$upgrade" == false ]; then
 	echo "Building current configuration to be available upon next boot (flake)"
 	sleep 3
@@ -111,5 +111,5 @@ elif [ "$boot" == true ] && [ "$upgrade" == false ]; then
 elif [ "$boot" == true ] && [ "$upgrade" == true ]; then
 	echo "Upgrading system and making configuration available upon next boot (flake)"
 	sleep 3
-	sudo nixos-rebuild boot --flake .#$hostname $impure --upgrade-all
+	sudo nixos-rebuild boot --flake .#$hostname $impure --update-input nixpkgs --commit-lock-file
 fi
