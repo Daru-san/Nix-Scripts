@@ -14,10 +14,9 @@ help() {
 	printf "\n-f flake:            Build using a flake, must be used with -r"
 	printf "\n-r repo name:        Specifiy the dotfile repo when using flakes e.g ~/.dotfiles note: it must have a 'flake.nix' file in it"
 	printf "\n-i impure:           Add the --impure flag when building"
-  printf"\n-u upgrade:           Upgrade as well as building, only works on flakes"
-  printf"\n-a backup:            Backup files incase of conflicts"
-  printf"\n-e extra-inputs:      A list of extra inputs to be updated"
-  printf "\n"
+  printf "\n-u upgrade:           Upgrade as well as building, only works on flakes"
+  printf "\n-a backup:            Backup files incase of conflicts"
+  printf "\n-e extra-inputs:      A list of extra inputs to be updated"
 }
 
 
@@ -34,7 +33,7 @@ while getopts "r:uesbhfi" option; do
 	f) flake=true ;;
 	s) switch=true ;;
 	b) build=true ;;
-  a) backup="-b backup"
+  a) backup="-b backup" ;;
 	e) inputs=${OPTARG}
 		;;
 	i) impure="--impure" ;;
@@ -88,7 +87,7 @@ elif [ "$switch" == true ] && [ "$upgrade" == false ]; then
 elif [ "$switch" == true ] && [ "$upgrade" == true ]; then
 	echo "Upgrading system and switching to current configuration (flake)"
 	sleep 3
-	home-manager switch $impure $backup --update-input nixpkgs --update-input home-manager --commit-lock-file --flake .#$user@$hostname
+	home-manager switch $impure $backup --flake .#$user@$hostname --update-input nixpkgs --update-input home-manager --commit-lock-file
 elif [ "$build" == true ] && [ "$upgrade" == false ]; then
 	echo "Building current configuration (flake)"
 	sleep 3
@@ -96,5 +95,5 @@ elif [ "$build" == true ] && [ "$upgrade" == false ]; then
 elif [ "$build" == true ] && [ "$upgrade" == true ]; then
 	echo "Upgrading system and making configuration (flake)"
 	sleep 3
-	home-manager build $impure $backup --update-input nixpkgs --update-input home-manager --commit-lock-file --flake .#$user@$hostname
+	home-manager build $impure $backup --flake .#$user@$hostname --update-input nixpkgs --update-input home-manager --commit-lock-file
 fi
