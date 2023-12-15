@@ -26,7 +26,7 @@ upgrade=false
 build=false
 flake=false
 
-while getopts "r:uesbhfi" option; do
+while getopts "r:uaesbhfi" option; do
 	case $option in
 	r) repo=${OPTARG} ;;
 	u) upgrade=true ;;
