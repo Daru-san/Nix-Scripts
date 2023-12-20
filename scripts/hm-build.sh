@@ -79,7 +79,7 @@ flakeupdate() {
 }
 
 flake() {
-  echo "Using flakes..\n"
+  printf "Using flakes..\n"
  if [[ "$build" ]]; then
   echo "Building home configuration"
   home-manager build --flake $flakestr $impure $backup
