@@ -5,7 +5,7 @@
 help() {
 	printf "hm-build by Daru-san\n"
 	printf "=======================\n"
-	printf "\nThis is a custom home-manager script made to make building nixos configurations easier for flake and non-flake users alike!\n"
+	printf "\nThis is a custom home-manager script made to make building home manager configurations easier for flake and non-flake users alike!\n"
 	printf "\nOptions:"
 	printf "\n-h help:             show help\n"
 	printf "\nMain options:"
@@ -14,19 +14,109 @@ help() {
 	printf "\n-f flake:            Build using a flake, must be used with -r"
 	printf "\n-r repo name:        Specifiy the dotfile repo when using flakes e.g ~/.dotfiles note: it must have a 'flake.nix' file in it"
 	printf "\n-i impure:           Add the --impure flag when building"
-  printf "\n-u upgrade:           Upgrade as well as building, only works on flakes"
-  printf "\n-a backup:            Backup files incase of conflicts"
-  printf "\n-e extra-inputs:      A list of extra inputs to be updated"
+  printf "\n-u upgrade:          Upgrade as well as building, only works on flakes"
+  printf "\n-a backup:           Backup files incase of conflicts"
+  printf "\n-e extra-inputs:     A list of extra inputs to be updated"
 }
 
+hostname=$(hostname -f)
+user=$USER
+flakestr=".#$user@$hostname"
+
+main() {
+  if [[ ! "$flake" ]]; then
+    build
+  elif [ "$flake" ] && [ ! "$upgrade" ]; then
+    flake
+  elif [ "$flake" ] && [ "$upgrade" ] ; then
+    flakeupdate
+  fi
+}
+
+notify() {
+  if [[ "$switch" ]]; then
+    if [[ "$upgrade" ]]; then
+      echo "Your home configuration has been updated successfully!"
+      notify-send "Home Manager" "Your home configuration has been updated and applied successfully"
+    else
+      echo "Your home configuration has been built successfully"
+      notify-send "Home Manager" "Your home configuration has been built and applied successfully"
+    fi
+  elif [[ "$build" ]]; then
+    if [[ "$upgrade" ]]; then
+      echo "Your home configuration has been built and updated without errors"
+      notify-send "Home Manager" "Successfully built updated home configuration, no changes have been applied"
+    else
+      echo "You home configuration has been built without errors"
+      notify-send "Home Manager" "Successfully built home configuration, no changes have been applied"
+    fi
+  fi
+}
+
+build() {
+  if [[ "$build" ]]; then
+    echo "Building home configuration"
+    home-manager build $backup $impure
+  elif [[ "$switch" ]]; then
+    echo "Applying changes to home configuration"
+    home-manager switch $impure $backup
+  fi
+}
+
+flakeupdate() {
+  printf "Using flakes..\n"
+  sleep 2
+  echo Updating flake inputs
+  nix flake update --commit-lock-file
+  sleep 2
+  if [[ "$build" ]]; then
+    echo "Updating home configuration and building only"
+    home-manager build --flake $flakestr $impure $backup
+  elif [[ "$switch" ]]; then
+    echo "Updating home configuration and applying changes"
+    home-manager switch --flake $flakestr $impure $backup
+  fi
+}
+
+flake() {
+  echo "Using flakes..\n"
+ if [[ "$build" ]]; then
+  echo "Building home configuration"
+  home-manager build --flake $flakestr $impure $backup
+ elif [[ "$switch" ]]; then
+  echo "Building home configuration and applying changes"
+  home-manager switch --flake $flakestr $impure $backup
+ fi
+}
+
+checks() {
+  if [ ! "$flake" ] && [ ! "$repo" == "repo" ]; then
+    printf "If you are going to specify a repo, please add the -f/flake option option\n"
+    exit
+  elif [ "$flake" ] && [ -d "$repo" ]; then
+	  cd $repo
+	  if [ ! -f "flake.nix" ]; then
+		  printf "Please input a directory with a 'flake.nix' file in it\n"
+		  exit
+	  fi
+  elif [ "$flake" ] && [ ! -d "$repo" ]; then
+	  printf "Please input a valid repo directory e.g ~/.dotfiles\n"
+	  printf "Example:"
+	  printf "'hm-build -fr ~/.dotfiles'\n"
+	  exit
+  fi
+
+  if [ "$build" ] && [ "$switch" ]; then
+    printf "Select one of the options, build or switch, not both\n"
+    exit
+  fi
+}
 
 #Make the options false by default
-switch=false
-upgrade=false
-build=false
-flake=false
 
-while getopts "r:uaesbhfi" option; do
+repo="repo"
+
+while getopts "r:uasbhfi" option; do
 	case $option in
 	r) repo=${OPTARG} ;;
 	u) upgrade=true ;;
@@ -34,8 +124,6 @@ while getopts "r:uaesbhfi" option; do
 	s) switch=true ;;
 	b) build=true ;;
   a) backup="-b backup" ;;
-	e) inputs=${OPTARG}
-		;;
 	i) impure="--impure" ;;
 	h) #Display help
 		help | less
@@ -44,56 +132,21 @@ while getopts "r:uaesbhfi" option; do
 	esac
 done
 
-#Get the system hostname and username
-hostname=$(hostname -f)
-user=$USER
+# Main part of the script
 
-#Stop the script if both switch and boot are selected at the same time
-if [ "$switch" == true ] && [ "$build" == true ]; then
-	printf "Please choose one, either switch(-s) or boot(-b)\n"
-	exit
+if [[ "$flake" ]]; then
+  cd $repo
 fi
 
-#cd into the repo if flake is set to true and check if the repo and the 'flake.nix' file exists
-if [ "$flake" == true ] && [ -d "$repo" ]; then
-	cd $repo
-	if [ ! -f "flake.nix" ]; then
-		echo "Please input a directory with a 'flake.nix' file in it"
-		exit
-	fi
-elif [ "$flake" == true ] && [ ! -d "$repo" ]; then
-	echo "Please input a valid repo directory e.g ~/.dotfiles"
-	echo ' '
-	echo "Example:"
-	echo "'nixos-rebuild -fr ~/.dotfiles'"
-	exit
-fi
+# Checking if all is well
+checks
 
-# For non-flake users
-if [ "$switch" == true ] && [ "$flake" == false ]; then
-	echo "Building current home configuration to switch immediately"
-	sleep 3
-	home-manager switch $impure $backup
-elif [ "$build" == true ] && [ "$flake" == false ]; then
-	echo "Building current home configuration"
-	sleep 3
-	home-manager build $impure $backup
-	
-  # For flake users
-elif [ "$switch" == true ] && [ "$upgrade" == false ]; then
-	echo "Building current home configuration to switch immediately (flake)"
-	sleep 3
-  home-manager switch $impure $backup --flake .#$user@$hostname
-elif [ "$switch" == true ] && [ "$upgrade" == true ]; then
-	echo "Upgrading system and switching to current configuration (flake)"
-	sleep 3
-	home-manager switch $impure $backup --flake .#$user@$hostname --update-input nixpkgs --update-input home-manager --commit-lock-file
-elif [ "$build" == true ] && [ "$upgrade" == false ]; then
-	echo "Building current configuration (flake)"
-	sleep 3
-	home-manager build  $impure $backup --flake .#$user@$hostname
-elif [ "$build" == true ] && [ "$upgrade" == true ]; then
-	echo "Upgrading system and making configuration (flake)"
-	sleep 3
-	home-manager build $impure $backup --flake .#$user@$hostname --update-input nixpkgs --update-input home-manager --commit-lock-file
-fi
+sleep 1
+
+# Execute main part of the script
+main
+
+sleep 1
+
+# Notify once the script has finished
+notify
