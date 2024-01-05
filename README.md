@@ -65,6 +65,9 @@ cd ~/repo
 nix-flake update --commit-lock-file
 home-manager switch --flake .#user@hostname --verbose --dry-run -b backup --impure --show-trace
 ```
+*If you'd like to update individual inputs on a flake based system you can do this
+```bash
+hm-build -sf -r repo --update-inputs nixpkgs,home-manager,ags #list inputs here seperated by commas
 ### Dependancies
 - nix
 - home-manager
