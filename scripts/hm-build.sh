@@ -16,7 +16,9 @@ help() {
 	printf "\n-i impure:           Add the --impure flag when building"
   printf "\n-u upgrade:          Upgrade as well as building, only works on flakes"
   printf "\n-a backup:           Backup files incase of conflicts"
-  printf "\n-e extra-inputs:     A list of extra inputs to be updated"
+  printf "\n-e extra-flags:      A list of extra flags to be inputted e.g --dry-run"
+  printf "\n-t show trace:       enables the --show-trace flag in home-manager for debugging"
+  printf "\n-v verbose:          enable verbose output using --verbose"
 }
 
 hostname=$(hostname -f)
@@ -31,6 +33,7 @@ main() {
   elif [ "$flake" ] && [ "$upgrade" ] ; then
     flakeupdate
   fi
+  run
 }
 
 notify() {
@@ -56,11 +59,12 @@ notify() {
 build() {
   if [[ "$build" ]]; then
     echo "Building home configuration"
-    home-manager build $backup $impure
+    operation="build"
   elif [[ "$switch" ]]; then
     echo "Applying changes to home configuration"
-    home-manager switch $impure $backup
+    operation="switch"
   fi
+  operationStr=$operation
 }
 
 flakeupdate() {
@@ -71,22 +75,30 @@ flakeupdate() {
   sleep 2
   if [[ "$build" ]]; then
     echo "Updating home configuration and building only"
-    home-manager build --flake $flakestr $impure $backup
+    operation="build"
   elif [[ "$switch" ]]; then
     echo "Updating home configuration and applying changes"
-    home-manager switch --flake $flakestr $impure $backup
+    operation="switch"
   fi
+  operationStr="$operation --flake $flakestr"
 }
 
 flake() {
   printf "Using flakes..\n"
  if [[ "$build" ]]; then
   echo "Building home configuration"
-  home-manager build --flake $flakestr $impure $backup
+  operation="build"
  elif [[ "$switch" ]]; then
+  operation="switch"
   echo "Building home configuration and applying changes"
-  home-manager switch --flake $flakestr $impure $backup
  fi
+ operationStr="$operation --flake $flakestr"
+}
+run(){
+  cmd="home-manager $operationStr $impure $backup $trace $verbose $extra"
+  echo "Running command $cmd"
+  sleep 2
+  $cmd
 }
 
 checks() {
@@ -116,15 +128,18 @@ checks() {
 
 repo="repo"
 
-while getopts "r:uasbhfi" option; do
+while getopts "r:e:tuasbhfiv" option; do
 	case $option in
-	r) repo=${OPTARG} ;;
+	r) repo=$OPTARG ;;
 	u) upgrade=true ;;
 	f) flake=true ;;
 	s) switch=true ;;
 	b) build=true ;;
   a) backup="-b backup" ;;
 	i) impure="--impure" ;;
+  t) trace="--show-trace" ;;
+  e) extra=$OPTARG ;;
+  v) verbose="-v" ;;
 	h) #Display help
 		help | less
 		exit
