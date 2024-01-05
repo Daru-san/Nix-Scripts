@@ -2,10 +2,18 @@
 # Useful scripts
 My personal repo for the scripts I use on my Linux systems.
 
-# Overview
+# Scripts:
 
 ## nix rebuild
-This script makes building NixOS configurations simpler and more streamlined by simplifying the syntax 
+This script makes building NixOS configurations simpler and more streamlined by simplifying the syntax
+### Options
+```
+   s - switch
+   b - build
+   u - update packages
+   f - use flakes
+   r - the repo to use
+``` 
 ### Example
 ```bash
     # This will build the NixOS configuration using flakes, 
@@ -69,5 +77,39 @@ This script uses hyprpicker to pick a color from the screen. Using wl-clipboard'
 - wl-clipboard
 - libnotify
 
+<!---
+# Installation
+Coming out someday
+
+## The flake, for nix users, currently a WIP
+
+You can add this to your flake.nix inputs
+```nix
+    useful-scripts = "github:Daru-san/useful-scripts";
+```
+<hr>
+Install on nix
+```
+   {pkgs, inputs}:{
+     environment.systemPackges = [
+       inputs.useful-scripts.packages.${pkgs.system}.hm-build
+       inputs.useful-scripts.packages.${pkgs.system}.color-picker
+     ];
+   }
+```
+<hr>
+Install on home manager
+```
+   {pkgs, inputs}:{
+     home.packages = [
+       inputs.useful-scripts.packages.${pkgs.system}.hm-build
+       inputs.useful-scripts.packages.${pkgs.system}.color-picker
+     ];
+   }
+```
+--->
+
 ## TODO
 - [ ] Create a flake
+- [ ] Update nix-rebuild
+- [ ] Make docs
