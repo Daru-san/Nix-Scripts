@@ -86,7 +86,6 @@ You can add this to your flake.nix inputs
 ```nix
     useful-scripts = "github:Daru-san/useful-scripts";
 ```
-<hr>
 Install on nix
 ```
    {pkgs, inputs}:{
@@ -96,7 +95,6 @@ Install on nix
      ];
    }
 ```
-<hr>
 Install on home manager
 ```
    {pkgs, inputs}:{
@@ -108,6 +106,6 @@ Install on home manager
 ```
 
 ## TODO
-- [ ] Create flake packages
+- [x] Create flake packages
 - [ ] Update nix-rebuild
 - [ ] Make docs
