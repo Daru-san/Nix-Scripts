@@ -85,32 +85,32 @@ This script uses hyprpicker to pick a color from the screen. Using wl-clipboard'
 
 You can add this to your flake.nix inputs
 ```nix
-   {
-    inputs = {
-      useful-scripts = {
-        url = "github:Daru-san/useful-scripts";
-        inputs.nixpkgs.follows = "nixpkgs";
-      };
+{
+  inputs = {
+    useful-scripts = {
+      url = "github:Daru-san/useful-scripts";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-   }
+   };
+ }
 ```
 Install on nix
 ```nix
-   {pkgs, inputs}:{
-     environment.systemPackges = [
-       inputs.useful-scripts.packages.${pkgs.system}.hm-build
-       inputs.useful-scripts.packages.${pkgs.system}.color-picker
-     ];
-   }
+{ pkgs, inputs }:{
+  environment.systemPackges = [
+    inputs.useful-scripts.packages.${pkgs.system}.hm-build
+    inputs.useful-scripts.packages.${pkgs.system}.color-picker
+   ];
+}
 ```
 Install on home manager
 ```nix
-   {pkgs, inputs}:{
-     home.packages = [
-       inputs.useful-scripts.packages.${pkgs.system}.hm-build
-       inputs.useful-scripts.packages.${pkgs.system}.color-picker
-     ];
-   }
+{ pkgs, inputs }:{
+  home.packages = [
+    inputs.useful-scripts.packages.${pkgs.system}.hm-build
+    inputs.useful-scripts.packages.${pkgs.system}.color-picker
+  ];
+}
 ```
 
 ## TODO
