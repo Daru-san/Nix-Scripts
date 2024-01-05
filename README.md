@@ -2,7 +2,7 @@
 # Useful scripts
 My personal repo for the scripts I use on my Linux systems.
 
-# Scripts:
+# Scripts
 
 ## nix rebuild
 This script makes building NixOS configurations simpler and more streamlined by simplifying the syntax
@@ -77,9 +77,8 @@ This script uses hyprpicker to pick a color from the screen. Using wl-clipboard'
 - wl-clipboard
 - libnotify
 
-<!---
+
 # Installation
-Coming out someday
 
 ## The flake, for nix users, currently a WIP
 
@@ -107,9 +106,8 @@ Install on home manager
      ];
    }
 ```
---->
 
 ## TODO
-- [ ] Create a flake
+- [ ] Create flake packages
 - [ ] Update nix-rebuild
 - [ ] Make docs
