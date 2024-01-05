@@ -36,6 +36,7 @@ main() {
   run
 }
 
+# Notify the user once the operation is complete
 notify() {
   if [[ "$switch" ]]; then
     if [[ "$upgrade" ]]; then
@@ -56,6 +57,7 @@ notify() {
   fi
 }
 
+# Sets up the command to build without flakes
 build() {
   if [[ "$build" ]]; then
     echo "Building home configuration"
@@ -67,6 +69,7 @@ build() {
   operationStr=$operation
 }
 
+# Sets up the command to build with flakes and update all flake inputs
 flakeupdate() {
   printf "Using flakes..\n"
   sleep 2
@@ -83,6 +86,7 @@ flakeupdate() {
   operationStr="$operation --flake $flakestr"
 }
 
+# Sets up the command to build with flakes
 flake() {
   printf "Using flakes..\n"
  if [[ "$build" ]]; then
@@ -94,6 +98,8 @@ flake() {
  fi
  operationStr="$operation --flake $flakestr"
 }
+
+# Tell the user what command is going to be run and run the command
 run(){
   cmd="home-manager $operationStr $impure $backup $trace $verbose $extra"
   echo "Running command $cmd"
@@ -101,6 +107,10 @@ run(){
   $cmd
 }
 
+# Check if:
+# 1. the repo exists
+# 2. there is a flake.nix file in the repo
+# 3. If two incompatible/mutually exclusive options are being used at once i.e build and switch
 checks() {
   if [ ! "$flake" ] && [ ! "$repo" == "repo" ]; then
     printf "If you are going to specify a repo, please add the -f/flake option option\n"
@@ -124,10 +134,10 @@ checks() {
   fi
 }
 
-#Make the options false by default
-
+# Assign the repo string to a default value so that if can be error checked later on
 repo="repo"
 
+# Declare all the options
 while getopts "r:e:tuasbhfiv" option; do
 	case $option in
 	r) repo=$OPTARG ;;
@@ -147,14 +157,16 @@ while getopts "r:e:tuasbhfiv" option; do
 	esac
 done
 
-# Main part of the script
 
-if [[ "$flake" ]]; then
-  cd $repo
-fi
+## Main part of the script ##
 
 # Checking if all is well
 checks
+
+# cd into the repo
+if [[ "$flake" ]]; then
+  cd $repo
+fi
 
 sleep 1
 
