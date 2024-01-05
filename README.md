@@ -1,68 +1,69 @@
-
 # Useful scripts
 My personal repo for the scripts I use on my Linux systems.
 
 # Scripts
 
-## nix rebuild
+## Nix-Rebuild
 This script makes building NixOS configurations simpler and more streamlined by simplifying the syntax
 ### Options
 ```
-   s - switch
-   b - build
-   u - update packages
-   f - use flakes
-   r - the repo to use
+s - switch
+b - build
+u - update packages
+f - use flakes
+r - the repo to use
 ``` 
 ### Example
 ```bash
-    # This will build the NixOS configuration using flakes, 
-    nix-rebuild -sif -r ~/repo #nix-rebuild switch --flake .#user@hostname --impure
+# This will build the NixOS configuration using flakes
+nix-rebuild -sif -r ~/repo
+# Same as
+sudo nixos-rebuild switch --flake .#user@hostname --impure
 ```
 ### Dependancies
 - nix
 #### Note
 This script is solely made for NixOS users and cannot be used on other distros without some extreme modification
 
-## hm build
+## Home-Build
 I wrote this script to make building home manager configurations easier and faster with easy to remember and learn options.
 
 ### Options
 ```
-   s - switch
-   b - build
-   u - update packages, only useful with flakes
-   a - backup conflicting files
-   v - verbose output
-   e - extra options e.g --dry-run
-   t - enable show-trace option which helps with debugging and testing
-   i - enable the impure flag
-   f - enable flakes
-   r - the repo which the flake.nix file is stored in
+s - switch
+b - build
+u - update packages, only useful with flakes
+a - backup conflicting files
+v - verbose output
+e - extra options e.g --dry-run
+t - enable show-trace option which helps with debugging and testing
+i - enable the impure flag
+f - enable flakes
+r - the repo which the flake.nix file is stored in
 ```
 ### Examples
 Miminal example
 ```bash
-   # In this example
-   hm-build -su
+# In this example
+hm-build -su
 
-   # Is the same as
+# Is the same as
 
-   home-manager switch -b backup
+home-manager switch -b backup
 ```
 Maximal example 
 <!--- 
    Is maximal even a word? 
 --->
 ```bash
-    # In this example
-    hm-build -suivaft -e --dry-run -r ~/repo
+# In this example
+hm-build -suivaft -e --dry-run -r ~/repo
  
-    # Is the same as
+# Is the same as
 
-    cd ~/repo 
-    nix-flake update --commit-lock-file
-    home-manager switch --flake .#user@hostname --verbose --dry-run -b backup --impure --show-trace
+cd ~/repo 
+nix-flake update --commit-lock-file
+home-manager switch --flake .#user@hostname --verbose --dry-run -b backup --impure --show-trace
 ```
 ### Dependancies
 - nix
