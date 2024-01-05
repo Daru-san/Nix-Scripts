@@ -67,7 +67,9 @@ home-manager switch --flake .#user@hostname --verbose --dry-run -b backup --impu
 ```
 *If you'd like to update individual inputs on a flake based system you can do this
 ```bash
+# use the update-inputs flag and list the individual inputs you'd like to update
 hm-build -sf -r repo --update-inputs nixpkgs,home-manager,ags #list inputs here seperated by commas
+```
 ### Dependancies
 - nix
 - home-manager
