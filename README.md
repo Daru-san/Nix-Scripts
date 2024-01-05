@@ -2,7 +2,7 @@
 # Useful scripts
 My personal repo for the scripts I use on my Linux systems.
 
-# Scripts:
+# Scripts
 
 ## nix rebuild
 This script makes building NixOS configurations simpler and more streamlined by simplifying the syntax
