@@ -102,7 +102,7 @@ This script uses hyprpicker to pick a color from the screen. Using wl-clipboard'
 
 # Installation
 
-## The flake, for nix users, currently a WIP
+## The flake, for nix users
 
 You can add this to your flake.nix inputs
 ```nix
