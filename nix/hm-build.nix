@@ -26,7 +26,7 @@
     meta = {
       description = "A simple script that simplifies home manager build operations";
       homepage = "https://github.com/Daru-san/useful-scripts";
-      license = lib.licenses.gpl3plus;
+      license = lib.licenses.gpl3Plus;
       maintainers = with lib.maintainers; [ Daru ];
     };
   }

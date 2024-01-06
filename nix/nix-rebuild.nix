@@ -25,7 +25,7 @@
     meta = {
       description = "A simple script that simplifies nixos configuration build operations";
       homepage = "https://github.com/Daru-san/useful-scripts";
-      license = lib.licenses.gpl3plus;
+      license = lib.licenses.gpl3Plus;
       maintainers = with lib.maintainers; [ Daru ];
     };
   }

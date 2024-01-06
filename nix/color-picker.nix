@@ -29,7 +29,7 @@
     meta = {
       description = "A simple color picker script for wayland compositors";
       homepage = "https://github.com/Daru-san/useful-scripts";
-      license = lib.licenses.gpl3plus;
+      license = lib.licenses.gpl3Plus;
       maintainers = with lib.maintainers; [ Daru ];
     };
   }
