@@ -29,45 +29,66 @@ This script is solely made for NixOS users and cannot be used on other distros w
 I wrote this script to make building home manager configurations easier and faster with easy to remember and learn options.
 
 ### Options
+Main, available for flake and non-flake users
+
 ```
 s - switch
 b - build
-u - update packages, only useful with flakes
 a - backup conflicting files
 v - verbose output
 e - extra options e.g --dry-run
 t - enable show-trace option which helps with debugging and testing
 i - enable the impure flag
+```
+
+For flake users
+```
 f - enable flakes
 r - the repo which the flake.nix file is stored in
+u - update packages, specifically updates all flake inputs in the flake.nix file
+update-inputs - update specific inputs if you only want to update one but not the other
 ```
 ### Examples
+
 Miminal example
 ```bash
 # In this example
-hm-build -su
+hm-build -sa
 
 # Is the same as
-
 home-manager switch -b backup
 ```
-Maximal example 
+
+Maximal example, using flakes
 <!--- 
    Is maximal even a word? 
 --->
 ```bash
 # In this example
-hm-build -suivaft -e --dry-run -r ~/repo
+hm-build -sivat -e --dry-run -fur ~/repo
  
 # Is the same as
-
 cd ~/repo 
 nix-flake update --commit-lock-file
 home-manager switch --flake .#user@hostname --verbose --dry-run -b backup --impure --show-trace
 ```
+
+If you'd like to update individual inputs on a flake based system you can do this
+```bash
+# Instead of using
+hm-build -s -fur ~/repo
+
+# Use the update-inputs flag and list the individual inputs you'd like to update
+# List the inputs seperated by commas
+hm-build -s -fr repo --update-inputs nixpkgs,home-manager,ags
+
+# note that using -u and --update-inputs together just updates all inputs anyway
+```
+
 ### Dependancies
 - nix
 - home-manager
+
 #### Notes
 It will work on most distros in theory, I'm not so sure about in practice but I'm sure it should work
 
@@ -78,39 +99,43 @@ This script uses hyprpicker to pick a color from the screen. Using wl-clipboard'
 - wl-clipboard
 - libnotify
 
-<!---
+
 # Installation
-Coming out someday
 
 ## The flake, for nix users, currently a WIP
 
 You can add this to your flake.nix inputs
 ```nix
-    useful-scripts = "github:Daru-san/useful-scripts";
+{
+  inputs = {
+    useful-scripts = {
+      url = "github:Daru-san/useful-scripts";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+   };
+ }
 ```
-<hr>
 Install on nix
+```nix
+{ pkgs, inputs }:{
+  environment.systemPackges = [
+    inputs.useful-scripts.packages.${pkgs.system}.hm-build
+    inputs.useful-scripts.packages.${pkgs.system}.color-picker
+   ];
+}
 ```
-   {pkgs, inputs}:{
-     environment.systemPackges = [
-       inputs.useful-scripts.packages.${pkgs.system}.hm-build
-       inputs.useful-scripts.packages.${pkgs.system}.color-picker
-     ];
-   }
-```
-<hr>
 Install on home manager
+```nix
+{ pkgs, inputs }:{
+  home.packages = [
+    inputs.useful-scripts.packages.${pkgs.system}.hm-build
+    inputs.useful-scripts.packages.${pkgs.system}.color-picker
+  ];
+}
 ```
-   {pkgs, inputs}:{
-     home.packages = [
-       inputs.useful-scripts.packages.${pkgs.system}.hm-build
-       inputs.useful-scripts.packages.${pkgs.system}.color-picker
-     ];
-   }
-```
---->
 
 ## TODO
-- [ ] Create a flake
+- [x] Create flake packages
 - [ ] Update nix-rebuild
-- [ ] Make docs
+- [x] Make docs
+- [ ] Fix hm-build flake inputs
