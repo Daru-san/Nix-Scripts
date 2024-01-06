@@ -56,7 +56,6 @@ Miminal example
 hm-build -sa
 
 # Is the same as
-
 home-manager switch -b backup
 ```
 
@@ -69,7 +68,6 @@ Maximal example, using flakes
 hm-build -sivat -e --dry-run -fur ~/repo
  
 # Is the same as
-
 cd ~/repo 
 nix-flake update --commit-lock-file
 home-manager switch --flake .#user@hostname --verbose --dry-run -b backup --impure --show-trace
@@ -81,8 +79,9 @@ If you'd like to update individual inputs on a flake based system you can do thi
 hm-build -s -fur ~/repo
 
 # Use the update-inputs flag and list the individual inputs you'd like to update
-hm-build -s -fr repo --update-inputs nixpkgs,home-manager,ags
 # List the inputs seperated by commas
+hm-build -s -fr repo --update-inputs nixpkgs,home-manager,ags
+
 # note that using -u and --update-inputs together just updates all inputs anyway
 ```
 
@@ -138,4 +137,5 @@ Install on home manager
 ## TODO
 - [x] Create flake packages
 - [ ] Update nix-rebuild
-- [ ] Make docs
+- [x] Make docs
+- [ ] Fix hm-build flake inputs
