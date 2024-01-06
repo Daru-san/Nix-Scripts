@@ -11,7 +11,7 @@
 }:
   stdenv.mkDerivation {
     pname = "color-picker";
-    version = "?";
+    version = "4c584";
     
     src = ../scripts;
     
@@ -29,7 +29,7 @@
     meta = {
       description = "A simple color picker script for wayland compositors";
       homepage = "https://github.com/Daru-san/useful-scripts";
-      license = lib.licenses.;
+      license = lib.licenses.gpl3plus;
       maintainers = with lib.maintainers; [ Daru ];
     };
   }

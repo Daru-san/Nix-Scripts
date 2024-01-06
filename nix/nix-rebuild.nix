@@ -7,7 +7,7 @@
 }:
   stdenv.mkDerivation {
     pname = "nix-rebuild";
-    version = "?";
+    version = "15f71";
     
     src = ../scripts;
     
@@ -25,7 +25,7 @@
     meta = {
       description = "A simple script that simplifies nixos configuration build operations";
       homepage = "https://github.com/Daru-san/useful-scripts";
-      license = lib.licenses.?;
+      license = lib.licenses.gpl3plus;
       maintainers = with lib.maintainers; [ Daru ];
     };
   }

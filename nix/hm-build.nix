@@ -8,7 +8,7 @@
 }:
   stdenv.mkDerivation {
     pname = "hm-build";
-    version = "?";
+    version = "96d3a";
     
     src = ../scripts;
     
@@ -26,7 +26,7 @@
     meta = {
       description = "A simple script that simplifies home manager build operations";
       homepage = "https://github.com/Daru-san/useful-scripts";
-      license = lib.licenses.?;
+      license = lib.licenses.gpl3plus;
       maintainers = with lib.maintainers; [ Daru ];
     };
   }
