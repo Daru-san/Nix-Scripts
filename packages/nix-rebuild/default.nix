@@ -9,7 +9,7 @@
     pname = "nix-rebuild";
     version = "15f71";
     
-    src = ../scripts;
+    src = ../../scripts;
     
     buildInputs = [ bash subversion ];
     nativeBuildInputs = [ makeWrapper ];

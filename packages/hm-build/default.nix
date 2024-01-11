@@ -1,33 +1,30 @@
 {
   stdenv
 , lib
-, fetchFromGitHub
 , bash
 , subversion
 , makeWrapper
-, hyprpicker
 , libnotify
-, wl-clipboard
 }:
   stdenv.mkDerivation {
-    pname = "color-picker";
-    version = "4c584";
+    pname = "hm-build";
+    version = "96d3a";
     
-    src = ../scripts;
+    src = ../../scripts;
     
     buildInputs = [ bash subversion ];
     nativeBuildInputs = [ makeWrapper ];
     
     installPhase = ''
       mkdir -p $out/bin
-      cp $src/color-picker.sh $out/bin/color-picker 
+      cp $src/hm-build.sh $out/bin/hm-build 
 
-       wrapProgram $out/bin/color-picker \
-        --prefix PATH : ${lib.makeBinPath [ bash subversion hyprpicker libnotify wl-clipboard ]}     
-    '';
+       wrapProgram $out/bin/hm-build \
+        --prefix PATH : ${lib.makeBinPath [ bash subversion libnotify ]}     
     
+    '';
     meta = {
-      description = "A simple color picker script for wayland compositors";
+      description = "A simple script that simplifies home manager build operations";
       homepage = "https://github.com/Daru-san/useful-scripts";
       license = lib.licenses.gpl3Plus;
       maintainers = with lib.maintainers; [ Daru ];
