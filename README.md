@@ -1,3 +1,4 @@
+
 # Useful scripts
 My personal repo for the scripts I use on my Linux systems.
 
@@ -6,21 +7,37 @@ My personal repo for the scripts I use on my Linux systems.
 ## Nix-Rebuild
 This script makes building NixOS configurations simpler and more streamlined by simplifying the syntax
 ### Options
+For normal users
+Main, available for flake and non-flake users
+
 ```
-s - switch
-b - build
-u - update packages
-f - use flakes
-r - the repo to use
-``` 
+S - switch
+B - build
+v - verbose output
+e - extra options e.g --version
+t - enable show-trace option which helps with debugging and testing
+i - enable the impure flag
+d - use the --dry-run flag
+```
+
+For flake users
+```
+F - enable flakes
+r - the repo which the flake.nix file is stored in, if not specified will check current directory. You must use either the auto flag or this flag
+u - update packages, specifically updates all flake inputs in the flake.nix file
+a - auto mode, uses your current directory and sets a default userstring
+n - specify your hostname, can be used with auto mode
+update-inputs - update specific inputs if you only want to update one but not the other
+```
 ### Example
 ```bash
 # This will build the NixOS configuration using flakes
-nix-rebuild -sif -r ~/repo
+nix-rebuild -Si -Fa
 # Same as
-sudo nixos-rebuild switch --flake .#user@hostname --impure
+nix flake update --commit-lock-file
+sudo nixos-rebuild switch --flake .#hostname --impure
 ```
-### Dependancies
+### Dependencies
 - nix
 #### Note
 This script is solely made for NixOS users and cannot be used on other distros without some extreme modification
@@ -32,31 +49,34 @@ I wrote this script to make building home manager configurations easier and fast
 Main, available for flake and non-flake users
 
 ```
-s - switch
-b - build
-a - backup conflicting files
+S - switch
+B - build
+b - backup conflicting files
 v - verbose output
-e - extra options e.g --dry-run
+e - extra options e.g --version
 t - enable show-trace option which helps with debugging and testing
 i - enable the impure flag
+d - use the --dry-run flag
 ```
 
 For flake users
 ```
-f - enable flakes
-r - the repo which the flake.nix file is stored in
+F - enable flakes
+r - the repo which the flake.nix file is stored in, if not specified will check current directory
 u - update packages, specifically updates all flake inputs in the flake.nix file
+a - auto mode, uses your current directory and sets a default userstring
+n - specify your userstring, can be used with auto mode
 update-inputs - update specific inputs if you only want to update one but not the other
 ```
 ### Examples
 
-Miminal example
+Minimal example
 ```bash
 # In this example
-hm-build -sa
+hm-build -Sb
 
 # Is the same as
-home-manager switch -b backup
+home-manager switch -b hmbak
 ```
 
 Maximal example, using flakes
@@ -65,25 +85,26 @@ Maximal example, using flakes
 --->
 ```bash
 # In this example
-hm-build -sivat -e --dry-run -fur ~/repo
+hm-build -Sivbtd -Fan
  
 # Is the same as
-cd ~/repo 
+# It will check if the current directory has a flake.nix file
 nix-flake update --commit-lock-file
 home-manager switch --flake .#user@hostname --verbose --dry-run -b backup --impure --show-trace
 ```
-
+<!---
 If you'd like to update individual inputs on a flake based system you can do this
 ```bash
 # Instead of using
-hm-build -s -fur ~/repo
+hm-build -S -Fur ~/repo
 
 # Use the update-inputs flag and list the individual inputs you'd like to update
 # List the inputs seperated by commas
-hm-build -s -fr repo --update-inputs nixpkgs,home-manager,ags
+hm-build -S -Fr repo --update-inputs nixpkgs,home-manager,ags
 
 # note that using -u and --update-inputs together just updates all inputs anyway
 ```
+--->
 
 ### Dependancies
 - nix
@@ -136,6 +157,8 @@ Install on home manager
 
 ## TODO
 - [x] Create flake packages
-- [ ] Update nix-rebuild
+- [x] Update nix-rebuild
 - [x] Make docs
-- [ ] Fix hm-build flake inputs
+- [ ] Finish hm-build and nix-rebuild flake inputs
+- [x] Update hm-build and nix-rebuild flake options
+
