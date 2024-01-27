@@ -7,7 +7,7 @@
 }:
   stdenv.mkDerivation {
     pname = "nix-rebuild";
-    version = "15f71";
+    version = "168c646";
     
     src = ../../scripts;
     
