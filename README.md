@@ -85,13 +85,30 @@ Maximal example, using flakes
 --->
 ```bash
 # In this example
-hm-build -Sivbtd -Fan
+hm-build -Sivbtd -Fau
  
 # Is the same as
 # It will check if the current directory has a flake.nix file
 nix-flake update --commit-lock-file
 home-manager switch --flake .#user@hostname --verbose --dry-run -b backup --impure --show-trace
 ```
+#### For flake users, these also apply to nix-rebuild:
+Specify a repo using -r
+```bash
+hm-build -S -Fr ~/repo
+
+#You have to use this if you're not going to use -r, it will use the current directory:
+# -a is for auto mode
+hm-build -S -Fa
+```
+
+Specify your userstring using
+```bash
+# This will take the hostname and username you specify and use it instead of the defaults for your system
+hm-build -S -Fan user@hostname
+```
+
+
 <!---
 If you'd like to update individual inputs on a flake based system you can do this
 ```bash
