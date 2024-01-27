@@ -8,7 +8,7 @@
 }:
   stdenv.mkDerivation {
     pname = "hm-build";
-    version = "96d3a";
+    version = "10a8406";
     
     src = ../../scripts;
     
