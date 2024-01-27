@@ -3,8 +3,8 @@
 name="Home Manager Build"
 # Create an option to show help
 help() {
-	printf "hm-build by Daru-san\n"
-	printf "=======================\n"
+	printf "${titleColor}Home Manager Build by Daru-san${normal}\n"
+	printf "==============================\n"
 	printf "\nThis is a custom home-manager script made to make building home manager configurations easier for flake and non-flake users alike!\n"
 	printf "\nOptions:"
 	printf "\n-h help:             show help"
@@ -29,13 +29,17 @@ help() {
 	printf "\n-u upgrade:          Update all flake inputs before building"
 	printf "\n-r repo name:        Specifiy the dotfile repo when using flakes e.g ~/.dotfiles note: it must have a 'flake.nix' file in it"
 	printf "\n-a auto mode:        Will automatically choose your hostname and build in the current directory"
-	printf "\n-n choose string:    Allows you to specify the hostname and username strings i.e hm-build -S -FN user@hostname"
+	printf "\n-n choose string:    Allows you to specify the hostname and username strings i.e -> ${cmdColor}hm-build -S -Fn user@hostname${normal}"
 	printf "\n $errorColor Please note that -r and -n are incompatible with each other and -N and -n are as well, although -N and -r or -n and -r are compatible $normal"
 }
 
 # Colors
 errorColor=$(tput setaf 1)
 normal=$(tput sgr0)
+cmdColor=$(tput setaf 2)
+successColor=$(tput setaf 29)
+notifyColor=$(tput setaf 23)
+titleColor=$(tput setaf 77)
 
 getUserString() {
 	hostname=$(hostname -f)
@@ -62,7 +66,7 @@ fail=true
 
 failure() {
 	if [[ "$fail" ]]; then
-		printf "Build unsuccessful\n"
+		printf "${errorColor}Build unsuccessful, no changes have been made ${normal}\n"
 		notify-send "$name" "Build unsuccessful"
 		exit
 	fi
@@ -74,13 +78,11 @@ main() {
 	getFlags
 
 	# Getting all the relevant build flags
-	if [[ ! "$flake" ]]; then
-		build
-	elif [[ "$flake" ]]; then
+	build
+	if [[ "$flake" ]]; then
 		if [[ "$upgrade" ]]; then
 			flakeUpdate
 		fi
-		flakeRun
 		getUserString
 	fi
 
@@ -128,7 +130,7 @@ notifyBegin() {
 		msg="$msg , may take time depending on updates from flakes, e.g nixpkgs"
 	fi
 
-	printf "$msg\n"
+	printf "${notifyColor}$msg${normal}\n"
 	notify-send "$name" "$msg"
 }
 
@@ -144,7 +146,7 @@ notifyEnd() {
 		msg="$msg , flake inputs have also been updated."
 	fi
 
-	printf "$msg\n"
+	printf "${successColor}$msg${normal}\n"
 	notify-send "$name" "$msg"
 }
 
@@ -162,25 +164,14 @@ build() {
 flakeUpdate() {
 	printf "Using flakes..\n"
 	sleep 2
-	printf "Updating flake inputs"
+	printf "${errorColor}Warning: Updating flake inputs${normal}"
 	nix flake update --commit-lock-file
-}
-
-# Sets up the command to build with flakes
-flakeRun() {
-	printf "Using flakes..\n"
-	if [[ "$build" ]]; then
-		operation="build"
-	elif [[ "$switch" ]]; then
-		operation="switch"
-	fi
-	operationStr="$operation"
 }
 
 # Tell the user what command is going to be run and run the command
 run() {
 	cmd="home-manager $operationStr $flags"
-	echo "Running command $cmd"
+	echo "--> ${cmdColor}$cmd${normal}"
 	sleep 2
 	$cmd
 }
