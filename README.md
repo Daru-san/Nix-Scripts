@@ -1,5 +1,9 @@
+_**This repo has been archived, go to [Nix-Scripts](https://git.sr.ht/~darumaka/Nix-Scripts)** on sourcehut_
 
-# Useful scripts
+# Outdated
+Everything beyond this point is outdated, development has been moved to the sourcehut repo
+
+# Useful Scripts
 My personal repo for the scripts I use on my Linux systems.
 
 # Scripts
